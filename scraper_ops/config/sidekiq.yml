@@ -1,0 +1,16 @@
+development:
+  # Sidekiq redis
+  redis:
+    host: 'redis'
+    port: '6379'
+    db: '1'
+  # RabbitMQ queue
+  rabbitmq:
+    queue_name: 'scraper'
+
+# gem https://github.com/sidekiq-scheduler/sidekiq-scheduler
+:scheduler:
+  :schedule:
+    producer_job:
+      every: 5s
+      class: ProducerJob

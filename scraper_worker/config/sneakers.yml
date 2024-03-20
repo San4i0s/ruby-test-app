@@ -1,0 +1,28 @@
+template: &template
+  username:       'guest'
+  password:       'guest'
+  host:           '0.0.0.0'
+  port:           5672
+  max_priority:   255
+  vhost:          '/'
+  exchange:       'sneakers'
+  exchange_type:  :direct
+  heartbeat:       30
+  ack:             true
+  durable:         true
+  daemonize:       false
+  prefetch:        10
+  timeout_job_after: 300
+  retry_max_times: 3
+  retry_timeout:   10_000
+  threads:         1
+  workers:         2
+  start_worker_delay: 10
+  log:            'log/sneakers.log'
+  pid_path:       'tmp/pids/sneakers.pid'
+
+  queue:
+    subscribe: 'scraper'
+
+development:
+  <<: *template

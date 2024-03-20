@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rails-web-deployment
+  namespace: application
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rails-web
+  template:
+    metadata:
+      labels:
+        app: rails-web
+    spec:
+      containers:
+      - name: rails-web
+        image: san4i0s/ops:latest
+        ports:
+        - containerPort: 3000
+        env:
+        - name: RAILS_ENV
+          value: development
+        command: ["bash", "-c", "rails db:migrate RAILS_ENV=development && rails server -b 0.0.0.0"]
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rails-web-service
+  namespace: application
+spec:
+  selector:
+    app: rails-web
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+  type: ClusterIP

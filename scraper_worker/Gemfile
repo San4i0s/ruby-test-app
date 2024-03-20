@@ -1,0 +1,16 @@
+source 'https://rubygems.org'
+
+# gemspec
+
+gem 'activerecord'
+
+gem 'bunny'
+# The fastest JSON parser and object serializer
+gem 'oj'
+gem 'oj_mimic_json'
+
+gem 'sneakers'
+
+gem 'pg'
+gem 'require_all'
+gem 'psych', '3.1.0'

@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sidekiq-deployment
+  namespace: application
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sidekiq
+  template:
+    metadata:
+      labels:
+        app: sidekiq
+    spec:
+      containers:
+      - name: sidekiq
+        image: san4i0s/ops:latest
+        ports:
+        - containerPort: 3000
+        env:
+        - name: RAILS_ENV
+          value: development
+        - name: REDIS_URL
+          value: "redis://redis:6379/1"
+        command: ["bundle", "exec", "sidekiq"]
+        
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sidekiq-service
+  namespace: application
+spec:
+  selector:
+    app: sidekiq
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+  type: ClusterIP

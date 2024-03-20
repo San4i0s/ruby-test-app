@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  web:
+    image: ops:latest
+    container_name: rails_web
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+      - rabbitmq
+      - redis
+    environment:
+      RAILS_ENV: development
+    command: bash -c "rails db:migrate RAILS_ENV=development && rails server -b 0.0.0.0 "
+
+  sidekiq:
+    image: ops:latest
+    container_name: sidekiq
+    depends_on:
+      - db
+      - rabbitmq
+      - redis
+    environment:
+      RAILS_ENV: development
+      REDIS_URL: redis://localhost:6379/1
+    command: bundle exec sidekiq
+
+  db:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      POSTGRES_USER: scraper_ops
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: scraper_ops_development
+
+  rabbitmq:
+    image: rabbitmq:latest
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"  
+      - "15672:15672"  
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+      RABBITMQ_DEFAULT_VHOST: /
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
